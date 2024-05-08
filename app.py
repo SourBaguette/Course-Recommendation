@@ -25,4 +25,4 @@ def recommend_extended():
         return render_template('recommendations_extended.html', recommended_courses=recommended_extended_courses)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
