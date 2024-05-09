@@ -1,11 +1,8 @@
 from flask import Flask, request, render_template, jsonify
-from dotenv import load_dotenv
 import os
 from utils.recommendation_functions import get_course_recommendations
 from utils.recommendation_extended_functions import get_extended_course_recommendations
 from flask_cors import CORS
-
-load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -33,4 +30,4 @@ def recommend_extended():
         return render_template('recommendations_extended.html', recommended_courses=recommended_extended_courses)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=443, ssl_context=('/etc/letsencrypt/live/courserecommendation.chickenkiller.com/fullchain.pem', '/etc/letsencrypt/live/courserecommendation.chickenkiller.com/privkey.pem'))
