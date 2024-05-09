@@ -1,8 +1,16 @@
 from flask import Flask, request, render_template, jsonify
+from dotenv import load_dotenv
+import os
 from utils.recommendation_functions import get_course_recommendations
 from utils.recommendation_extended_functions import get_extended_course_recommendations
+from flask_cors import CORS
+
+load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
+
+app.config['DEBUG'] = os.environ.get('FLASK_DEBUG')
 
 @app.route('/')
 def index():
@@ -25,4 +33,4 @@ def recommend_extended():
         return render_template('recommendations_extended.html', recommended_courses=recommended_extended_courses)
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run()
