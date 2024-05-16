@@ -169,9 +169,21 @@
       .course-name{
         width: 300px;
       }
+
+      .logo{
+        height: 150px;
+        width: auto;
+      }
+
+      .arrow{
+        margin-top: 10px;
+        height: 17px;
+        width: auto;
+      }
     </style>
   </head>
   <body>
+    <img class="logo" src="{{ url_for('static', filename='img/productMap.png') }}">
     <div class="mainContainer">
       <div class="container">
         <h1>Topics Recommendation</h1>
@@ -287,7 +299,7 @@
                   course.similarity +
                   '</p> <a href="'+ 
                   course.figma_link + 
-                  '">View</a></div>';
+                  '">View <img class="arrow" src="{{url_for("static", filename="img/arrow.png")}}"></a></div>';
               });
               cardsHtml += "</div>";
               resultsDiv.innerHTML = cardsHtml;
