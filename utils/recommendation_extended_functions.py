@@ -39,7 +39,7 @@ def rank_course(similarity_scores, course_data):
 
 # Function to recommend courses
 def recommend_courses(course_data, no_of_recommendations):
-    recommended_courses = course_data.sort_values(by='similarity', ascending=False)[['name', 'similarity']].head(no_of_recommendations)
+    recommended_courses = course_data.sort_values(by='similarity', ascending=False)[['name', 'similarity', 'figma_link']].head(no_of_recommendations)
     return recommended_courses
 
 # Function to get course recommendations based on user input
@@ -49,7 +49,8 @@ def get_extended_course_recommendations(user_input, no_of_recommendations):
 
     # Data cleaning
     # Drop the unnecessary columns
-    course_data.drop(columns=['figma_link', 'created_at', 'author_id', 'grade_low', 'grade_high'], inplace=True)
+    # course_data.drop(columns=['figma_link', 'created_at', 'author_id', 'grade_low', 'grade_high'], inplace=True)
+    course_data.drop(columns=['created_at', 'author_id', 'grade_low', 'grade_high'], inplace=True)
     # Rename the columns
     course_data.rename(columns={'title': 'name', 'topic_group': 'category', 'skill_group':'competency_area' }, inplace=True)
 

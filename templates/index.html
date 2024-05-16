@@ -28,6 +28,14 @@
         padding: 0 10px;
       }
 
+      .recommendationResults a:link{
+        color: black;
+      }
+
+      .recommendationResults a:visited{
+        color: black;
+      }
+
       .recommendationCourses {
         border: 1px solid gray;
         border-radius: 24px;
@@ -157,6 +165,10 @@
       .feedback-button.selected{
         border: 1px solid gray;
       }
+
+      .course-name{
+        width: 300px;
+      }
     </style>
   </head>
   <body>
@@ -269,11 +281,13 @@
                 "<h1>Search Results:</h1> <p>Sorted by the similarity level based on query provided</p><div class='recommendationCourses'>";
               recommendedCourses.forEach(function (course) {
                 cardsHtml +=
-                  '<div class="course-card"><p>' +
+                  '<div class="course-card"><p class="course-name">' +
                   course.name +
                   '</p><p class="course-similarity">' +
                   course.similarity +
-                  "</p></div>";
+                  '</p> <a href="'+ 
+                  course.figma_link + 
+                  '">View</a></div>';
               });
               cardsHtml += "</div>";
               resultsDiv.innerHTML = cardsHtml;
@@ -342,8 +356,8 @@
             //   console.log(data);
               // Handle response from backend if needed
               // Remove form elements and display thank you message
-            //   var formElement = document.getElementById("feedback-form");
-            //   formElement.innerHTML = "<p>Thank you for your feedback!</p>";
+              var formElement = document.getElementById("feedbackFormContainer");
+              formElement.innerHTML = "<h1>Thank you for your feedback!😊</h1>";
             })
             .catch((error) => {
               console.error("Error:", error);
