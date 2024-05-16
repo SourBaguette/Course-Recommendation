@@ -1,79 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Neue+Montreal&display=swap"
+      rel="stylesheet"
+    />
     <title>Course Recommendation</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+      }
 
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      .container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+      }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+      .recommendationResults {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 0 10px;
+      }
 
-        form {
-            margin-bottom: 20px;
-        }
+      .recommendationCourses {
+        border: 1px solid gray;
+        border-radius: 24px;
+        box-shadow: 0px 12px 16px 0px #adadad0f;
+      }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-        }
+      h1 {
+        color: #333;
+        font-family: "Neue Montreal";
+        font-size: 52px;
+        font-weight: 400;
+        line-height: 64px;
+        letter-spacing: -0.015em;
+        text-align: left;
+        color: #000000;
+      }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
+      p,
+      label {
+        font-family: "Neue Montreal";
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 28px;
+        letter-spacing: -0.01em;
+        color: #000000;
+      }
 
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
+      form {
+        margin-bottom: 20px;
+      }
 
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #000000;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        font-family: "Neue Montreal";
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        border: none;
+        font-family: "Neue Montreal";
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .course-card {
+        border-bottom: 1px solid gray;
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .course-card:nth-child(5) {
+        border-bottom: none;
+      }
+
+      .course-card p {
+        margin: 0;
+      }
+
+      .course-similarity {
+        color: #000000;
+      }
+
+      .mainContainer {
+        width: 70%;
+        margin: 0 auto;
+      }
+
+      .userInput {
+        height: 45px;
+        text-align: center;
+        border-radius: 24px;
+        color: #000000;
+      }
+
+      .searchType {
+        display: flex;
+        margin: 18px 0;
+      }
+
+      .searchType input {
+        margin-bottom: 10px;
+        margin-right: 10px;
+      }
+
+      .searchType label {
+        margin-right: 40px;
+      }
+
+      .searchTopics {
+        width: 100%;
+        padding: 20px 0;
+        background-color: #d2c2ff;
+        color: black;
+        border-radius: 24px;
+      }
+
+      .feedbackButton input{
+        background-color: #F4F5F5;
+        padding: 25px 70px;
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+      }
+
+      .feedback-button{
+        font-size: 22px;
+      }
+
+      .feedbackButton{
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0px 20px 0px;
+      }
+
+      .feedback-button.selected{
+        border: 1px solid gray;
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Course Recommendation</h1>
-        <form action="/recommend" method="post">
-            <label for="user_input">Enter your query:</label>
-            <input type="text" id="user_input" name="user_input" placeholder="E.g., I want to launch marketing campaign for food-tech mobile application">
-            <input type="submit" value="Submit">
+  </head>
+  <body>
+    <div class="mainContainer">
+      <div class="container">
+        <h1>Topics Recommendation</h1>
+        <p>
+          Briefly describe what is your goal and what you would like to study
+        </p>
+        <form id="recommendationForm">
+          <input
+            class="userInput"
+            type="text"
+            id="user_input"
+            name="user_input"
+            placeholder="E.g., I want to launch marketing campaign for food-tech mobile application"
+          />
+          <div class="searchType">
+            <input
+              type="radio"
+              id="basic_search"
+              name="search_type"
+              value="basic"
+              checked
+            />
+            <label for="basic_search">Basic Search</label>
+            <input
+              type="radio"
+              id="extended_search"
+              name="search_type"
+              value="extended"
+            />
+            <label for="extended_search">Extended Search</label>
+          </div>
+          <input type="submit" value="Search Topics" class="searchTopics" />
         </form>
-        <br><br><br>
-        <h1>Extended Course Recommendation</h1>
-        <form action="/recommend_extended" method="post">
-            <label for="user_input">Enter your query:</label>
-            <input type="text" id="user_input" name="user_input" placeholder="E.g., I want to launch marketing campaign for food-tech mobile application">
-            <input type="submit" value="Submit">
+      </div>
+      <div
+        id="recommendationResults"
+        class="recommendationResults"
+        style="display: none"
+      ></div>
+      <!-- feedback form -->
+      <div id="feedbackFormContainer" class="container" style="display: none">
+        <h1>How accurate is the result?</h1>
+        <p>Provide a short feedback about the rating</p>
+        <form id="feedbackForm">
+          <!-- <input type="radio" id="bad" name="feedback" value="Bad" />
+          <label for="bad">Bad</label>
+          <input type="radio" id="decent" name="feedback" value="Decent" />
+          <label for="decent">Decent</label>
+          <input type="radio" id="love_it" name="feedback" value="Love it!" />
+          <label for="love_it">Love it!</label><br /><br /> -->
+          <div class="feedbackButton">
+            <input type="button" id="bad" class="feedback-button" value="😔 Bad" />
+            <input
+              type="button"
+              id="decent"
+              class="feedback-button"
+              value="🙂 Decent"
+            />
+            <input
+              type="button"
+              id="love_it"
+              class="feedback-button"
+              value="🥰 Love it!"
+            />
+            <input type="hidden" id="selectedFeedback" name="feedback" />
+          </div>
+          <input type="submit" class="searchTopics" value="Submit" />
         </form>
+      </div>
+      <div id="noResults" style="display: none" class="container">
+        <h1>Search Results</h1>
+        <p>
+          We're unable to calculate courses for you, please clarity your request
+          or change it.
+        </p>
+        <p>Try one more time.</p>
+      </div>
     </div>
-</body>
+    <script>
+      let recommendedCourses;
+      // Handle course recommendation form submission
+      document
+        .getElementById("recommendationForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          let userInput = document.getElementById("user_input").value;
+          let searchType = document.querySelector(
+            'input[name="search_type"]:checked'
+          ).value;
+          // let feedbackDiv = searchType === "basic" ? document.getElementById("feedbackForm") : document.getElementById("feedbackFormExtended");
+          let feedbackDiv = document.getElementById("feedbackFormContainer");
+          let endpoint =
+            searchType === "basic" ? "/recommend" : "/recommend_extended";
+          fetch(endpoint, {
+            method: "POST",
+            body: JSON.stringify({ user_input: userInput }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json()) // Parse the JSON response
+            .then((data) => {
+              recommendedCourses = JSON.parse(data.recommended_courses);
+              let noResults = document.getElementById("noResults");
+              let resultsDiv = document.getElementById("recommendationResults");
+              let cardsHtml =
+                "<h1>Search Results:</h1> <p>Sorted by the similarity level based on query provided</p><div class='recommendationCourses'>";
+              recommendedCourses.forEach(function (course) {
+                cardsHtml +=
+                  '<div class="course-card"><p>' +
+                  course.name +
+                  '</p><p class="course-similarity">' +
+                  course.similarity +
+                  "</p></div>";
+              });
+              cardsHtml += "</div>";
+              resultsDiv.innerHTML = cardsHtml;
+              if (recommendedCourses[0].similarity !== 0) {
+                resultsDiv.style.display = "block"; // Show the results div
+                feedbackDiv.style.display = "block"; // Show the feedback div
+                return;
+              } else if (recommendedCourses[0].similarity === 0) {
+                noResults.style.display = "block"; // Show the no results div
+                return;
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+
+      const buttons = document.querySelectorAll(".feedback-button");
+      const selectedInput = document.getElementById("selectedFeedback");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          buttons.forEach((otherButton) => {
+            if (otherButton !== button) {
+              otherButton.classList.remove("selected");
+            }
+          });
+          button.classList.add("selected");
+          selectedInput.value = button.value;
+        });
+      });
+
+      // Add event listener for form submission
+      document
+        .getElementById("feedbackForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          // Get form data
+        //   var formData = new FormData(this);
+        //     var selectedFeedback = document.querySelector(
+        //       'input[name="feedback"]:checked'
+        //     ).value;
+            let searchType = document.querySelector(
+              'input[name="search_type"]:checked'
+            ).value;
+        // console.log(selectedInput.value);
+          // Create object to hold form data
+          var feedbackData = {};
+
+          // Include recommendedCourses data in feedbackData object
+          feedbackData["feedback"] = selectedInput.value;
+          // feedbackData['recommendedCourses'] = JSON.stringify(recommendedCourses);
+          feedbackData["searchType"] = searchType;
+          feedbackData["recommendedCourses"] =
+            JSON.stringify(recommendedCourses);
+
+          // Send feedback data to backend
+          fetch("/submit_feedback", {
+            method: "POST",
+            body: JSON.stringify(feedbackData),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+            //   console.log(data);
+              // Handle response from backend if needed
+              // Remove form elements and display thank you message
+            //   var formElement = document.getElementById("feedback-form");
+            //   formElement.innerHTML = "<p>Thank you for your feedback!</p>";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              // Handle error if needed
+            });
+        });
+    </script>
+  </body>
 </html>

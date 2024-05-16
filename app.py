@@ -17,18 +17,23 @@ def index():
 @app.route('/recommend', methods=['POST'])
 def recommend():
     if request.method == 'POST':
-        user_input = request.form['user_input']
+        data = request.json
+        user_input = data.get('user_input')
         no_of_recommendations = 5  # Number of recommendations you want to show
         recommended_courses = get_course_recommendations(user_input, no_of_recommendations)
-        return render_template('recommendations.html', recommended_courses=recommended_courses)
+        print(recommended_courses)
+        # return render_template('recommendations.html', recommended_courses=recommended_courses)
+        return ({'recommended_courses': recommended_courses})
 
 @app.route('/recommend_extended', methods=['POST'])
 def recommend_extended():
     if request.method == 'POST':
-        user_input = request.form['user_input']
+        data = request.json
+        user_input = data.get('user_input')
         no_of_recommendations = 5  # Number of recommendations you want to show
         recommended_extended_courses = get_extended_course_recommendations(user_input, no_of_recommendations)
-        return render_template('recommendations_extended.html', recommended_courses=recommended_extended_courses)
+        # return render_template('recommendations_extended.html', recommended_courses=recommended_extended_courses)
+        return ({'recommended_courses': recommended_extended_courses})
 
 
 from flask import redirect
@@ -40,16 +45,15 @@ def submit_feedback():
         
         # Extract values from feedback_data
         feedback = feedback_data['feedback']
+        search_type = feedback_data['searchType']
         recommended_courses = feedback_data['recommendedCourses']
-        normal_recommendation = feedback_data['normal_recommendation']
-        extended_recommendation = feedback_data['extended_recommendation']
         
         # Modify the connection string according to your database location
         with sqlite3.connect('../feedback/userfeedback.db') as connection:
             cursor = connection.cursor()
             # Insert feedback data into SQLite database
-            cursor.execute("INSERT INTO userfeedback (normal_recommendation, extended_recommendation, satisfactory, user_data) VALUES (?, ?, ?, ?)",
-                           (normal_recommendation, extended_recommendation, feedback, recommended_courses))
+            cursor.execute("INSERT INTO userfeedback (search_type, feedback, recommended_courses) VALUES (?, ?, ?)",
+                           (search_type, feedback, recommended_courses))
             connection.commit()
     
     # If the request method is not POST
